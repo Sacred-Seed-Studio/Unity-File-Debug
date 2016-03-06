@@ -7,6 +7,8 @@ This project has a few goals
 - Have a nice interface to view the logs
   - No external dependencies
   - HTML5
+  - Searchable via message, stacktrace, timestamp, logtype
+  - Filterable by logtype
 
 ## How to use
 1. Import the [latest release's package](https://github.com/Sacred-Seed-Studio/Unity-File-Debug/releases) into your project
