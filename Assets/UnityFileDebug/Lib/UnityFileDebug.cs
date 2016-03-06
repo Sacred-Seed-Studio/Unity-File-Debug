@@ -15,9 +15,9 @@ public class UnityFileDebug : MonoBehaviour
     public bool showTime = false;
     public bool useAbsolutePath = false;
     public string fileName = "MyGame";
-    
+
     public string absolutePath = "c:\\";
-    
+
     public string filePath;
     public string filePathFull;
     public int count = 0;
@@ -50,7 +50,7 @@ public class UnityFileDebug : MonoBehaviour
         {
             Application.logMessageReceived -= HandleLog;
             fileWriter.WriteLine("\n]");
-            fileWriter.Close(); 
+            fileWriter.Close();
         }
     }
 
@@ -71,10 +71,10 @@ public class UnityFileDebug : MonoBehaviour
         else
         {
             int end = logString.IndexOf("]");
-            j.t = logString.Substring(1, end-1);
+            j.t = logString.Substring(1, end - 1);
             j.l = logString.Substring(end + 2);
         }
-        
+
         j.s = stackTrace;
         j.tm = System.DateTime.Now.ToString("yyyy.MM.dd.HH.mm.ss");
 
@@ -160,6 +160,6 @@ public static class Debug
 
     #region Warning
     public static void LogWarning(object message, DLogType type = DLogType.Warning) { UnityEngine.Debug.LogWarning("[" + type + "] " + message); }
-    public static void LogWarning(object message, Object context, DLogType type = DLogType.Warning) { UnityEngine.Debug.LogWarning("[" + type + "] " + message, context); } 
+    public static void LogWarning(object message, Object context, DLogType type = DLogType.Warning) { UnityEngine.Debug.LogWarning("[" + type + "] " + message, context); }
     #endregion
 }
