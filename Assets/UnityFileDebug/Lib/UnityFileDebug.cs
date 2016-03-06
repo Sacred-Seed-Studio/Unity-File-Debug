@@ -12,7 +12,7 @@ public class LogJSON
 [ExecuteInEditMode]
 public class UnityFileDebug : MonoBehaviour
 {
-    public bool showTime = false;
+    public bool logTime = true;
     public bool useAbsolutePath = false;
     public string fileName = "MyGame";
 
@@ -76,16 +76,17 @@ public class UnityFileDebug : MonoBehaviour
         }
 
         j.s = stackTrace;
-        j.tm = System.DateTime.Now.ToString("yyyy.MM.dd.HH.mm.ss");
+        if (logTime){ j.tm = System.DateTime.Now.ToString("yyyy.MM.dd.HH.mm.ss"); }
 
-        if (count == 0)
-        {
-            fileWriter.Write(JsonUtility.ToJson(j));
-        }
-        else
-        {
-            fileWriter.Write(",\n" + JsonUtility.ToJson(j));
-        }
+        fileWriter.Write((count == 0 ? "" : ",\n") + JsonUtility.ToJson(j));
+        //if (count == 0)
+        //{
+        //    fileWriter.Write(JsonUtility.ToJson(j));
+        //}
+        //else
+        //{
+        //    fileWriter.Write(",\n" + JsonUtility.ToJson(j));
+        //}
         count++;
     }
 }

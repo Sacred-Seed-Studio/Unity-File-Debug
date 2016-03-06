@@ -16,6 +16,9 @@ public class UnityFileDebugEditor : Editor
     SerializedProperty filePath;
     SerializedProperty filePathFull;
 
+    SerializedProperty logTime;
+    GUIContent logTimeContent;
+
     string copyPath;
 
     void OnEnable()
@@ -30,18 +33,26 @@ public class UnityFileDebugEditor : Editor
         fileNameContent.text = "File Name";
         fileNameContent.tooltip = "The filename (without extension) you would like to save logs as";
 
+        logTimeContent = new GUIContent();
+        logTimeContent.text = "Log Time";
+        logTimeContent.tooltip = "Log the time out with each event?";
+
         // Update references to serialized objects
         showAbsolute = serializedObject.FindProperty("useAbsolutePath");
         absolutePath = serializedObject.FindProperty("absolutePath");
         fileName = serializedObject.FindProperty("fileName");
         filePath = serializedObject.FindProperty("filePath");
         filePathFull = serializedObject.FindProperty("filePathFull");
+        logTime = serializedObject.FindProperty("logTime");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         instance.UpdateFilePath();
+
+        // Log Time
+        EditorGUILayout.PropertyField(logTime, logTimeContent);
 
         // Filename
         EditorGUILayout.PropertyField(fileName, fileNameContent);

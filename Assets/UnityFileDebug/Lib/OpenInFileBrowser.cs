@@ -1,5 +1,6 @@
 ﻿// http://wiki.unity3d.com/index.php/OpenInFileBrowser
 // CC BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
+
 public static class OpenInFileBrowser
 {
     public static bool IsInMacOS
@@ -16,12 +17,6 @@ public static class OpenInFileBrowser
         {
             return UnityEngine.SystemInfo.operatingSystem.IndexOf("Windows") != -1;
         }
-    }
-
-    [UnityEditor.MenuItem("Window/Test OpenInFileBrowser")]
-    public static void Test()
-    {
-        Open(UnityEngine.Application.dataPath);
     }
 
     public static void OpenInMac(string path)
