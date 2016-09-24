@@ -79,14 +79,6 @@ public class UnityFileDebug : MonoBehaviour
         if (logTime){ j.tm = System.DateTime.Now.ToString("yyyy.MM.dd.HH.mm.ss"); }
 
         fileWriter.Write((count == 0 ? "" : ",\n") + JsonUtility.ToJson(j));
-        //if (count == 0)
-        //{
-        //    fileWriter.Write(JsonUtility.ToJson(j));
-        //}
-        //else
-        //{
-        //    fileWriter.Write(",\n" + JsonUtility.ToJson(j));
-        //}
         count++;
     }
 }

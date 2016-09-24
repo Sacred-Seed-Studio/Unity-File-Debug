@@ -1,5 +1,5 @@
 # Unity-File-Debug
-Enhanced debug logging for Unity, with JSON export and HTML viewer.
+Enhanced debug logging for Unity, with JSON export and HTML viewer. [Read the blog post](http://www.sacredseedstudio.com/blog/2016/06/05/Output-the-Unity-console-to-file). [See the demo](http://www.sacredseedstudio.com/Unity-File-Debug/).
 
 ## Why
 This project has a few goals:
@@ -9,6 +9,7 @@ This project has a few goals:
   - No external dependencies
   - Searchable via message, stacktrace, timestamp, logtype
   - Filterable by logtype
+- Be able to drop it into existing projects
 
 ## How to use
 1. Import the [latest release's package](https://github.com/Sacred-Seed-Studio/Unity-File-Debug/releases) into your project
