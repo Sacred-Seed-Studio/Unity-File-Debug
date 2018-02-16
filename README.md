@@ -16,7 +16,7 @@ This project has a few goals:
 2. Move the prefab `Unity File Debug` into your scene
 3. Setup the filepath and settings in the inspector
 4. Copy the HTML to your output path via inspector button
-5. Use `Debug.Log` as normal, or for more advanced usage see Tester script in `Demo` folder
+5. Use `Debug.Log` as normal, or for more advanced usage see [Tester](/Assets/UnityFileDebug/Demo/Tester.cs) script in `Demo` folder
 6. Open the `index.html` file from your log folder, browse for a `*.json` log in the top left
 
 ## Developing
