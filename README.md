@@ -6,7 +6,10 @@
 [![GitHub issues][issues-badge]][issues]&nbsp;
 [![Pull Requests][pr-badge]][pulls]&nbsp;
 
-Enhanced debug logging for Unity, with JSON export and HTML viewer. [Read the blog post](http://www.sacredseedstudio.com/blog/2016/06/05/Output-the-Unity-console-to-file). [See the demo](http://www.sacredseedstudio.com/Unity-File-Debug/).
+Enhanced debug logging for Unity, with JSON export and HTML viewer.
+- [Read the blog post](http://www.sacredseedstudio.com/blog/2016/06/05/Output-the-Unity-console-to-file)
+- [See the demo](http://www.sacredseedstudio.com/Unity-File-Debug/)
+- [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/unity-file-debug-72250)
 
 ## Why
 This project has a few goals:
