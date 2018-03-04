@@ -1,4 +1,11 @@
 # Unity-File-Debug
+![Unity Version][unity-badge]&nbsp;
+[![Platform][platform-badge]][repo]&nbsp;
+[![GitHub license][license-badge]][license]&nbsp;
+[![GitHub release][version-badge]][releases]&nbsp;
+[![GitHub issues][issues-badge]][issues]&nbsp;
+[![Pull Requests][pr-badge]][pulls]&nbsp;
+
 Enhanced debug logging for Unity, with JSON export and HTML viewer. [Read the blog post](http://www.sacredseedstudio.com/blog/2016/06/05/Output-the-Unity-console-to-file). [See the demo](http://www.sacredseedstudio.com/Unity-File-Debug/).
 
 ## Why
@@ -26,3 +33,22 @@ This project has a few goals:
 
 ## Release
 In the Unity Editor, click the menu option `Package/Update Package`. The `UnityFileDebug.unitypackage` will be in the root of this project.
+
+<!--
+Badge References
+-->
+[version-badge]:https://img.shields.io/github/release/Sacred-Seed-Studio/Unity-File-Debug.svg
+[platform-badge]:https://img.shields.io/badge/platform-All-blue.svg
+[issues-badge]:https://img.shields.io/github/issues/Sacred-Seed-Studio/Unity-File-Debug.svg
+[license-badge]:https://img.shields.io/github/license/Sacred-Seed-Studio/Unity-File-Debug.svg
+[unity-badge]:https://img.shields.io/badge/Unity-5.4+-blue.svg
+[pr-badge]:https://img.shields.io/github/issues-pr/Sacred-Seed-Studio/Unity-File-Debug.svg
+
+<!--
+URL References
+-->
+[releases]:https://github.com/Sacred-Seed-Studio/Unity-File-Debug/releases
+[repo]:https://github.com/Sacred-Seed-Studio/Unity-File-Debug
+[issues]:https://github.com/Sacred-Seed-Studio/Unity-File-Debug/issues
+[license]:https://github.com/Sacred-Seed-Studio/Unity-File-Debug/blob/master/LICENSE
+[pulls]:https://github.com/Sacred-Seed-Studio/Unity-File-Debug/pulls
