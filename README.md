@@ -14,7 +14,7 @@ Enhanced debug logging for Unity, with file export and HTML viewer.
 ## Why
 - Output Unity debug info to log files (csv, tsv, json, txt)
 - A nice web interface to view the log files (csv, tsv, json)
-  - HTML5
+  - HTML5 (single file)
   - No external dependencies
   - Searchable via message, stacktrace, timestamp, logtype
   - Filterable by logtype
