@@ -40,9 +40,9 @@ HTML viewer is designed for modern browsers (chrome/firefox)
 ## How to Customize
 ### Custom log types
 1. Change DLogType enumeration in [DebugWrapper.cs](/Assets/UnityFileDebug/Lib/Logger/Scripts/DebugWrapper.cs)
-2. Update `topLogTypes` and `nestedLogTypes` arrays in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
-3. Update `LogTypeColors` css in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
-4. Update svg icons in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
+2. Update `topLogTypes` and `nestedLogTypes` arrays in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.html)
+3. Update `LogTypeColors` css in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.html)
+4. Update svg icons in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.html)
 
 ### No nesting in viewer
 1. Move all elements from `nestedLogTypes` array to `topLogTypes` in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
