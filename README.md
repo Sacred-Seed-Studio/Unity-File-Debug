@@ -6,15 +6,14 @@
 [![GitHub issues][issues-badge]][issues]&nbsp;
 [![Pull Requests][pr-badge]][pulls]&nbsp;
 
-Enhanced debug logging for Unity, with JSON export and HTML viewer.
+Enhanced debug logging for Unity, with file export and HTML viewer. 
 - [Read the blog post](http://www.sacredseedstudio.com/blog/2016/06/05/Output-the-Unity-console-to-file)
 - [See the demo](http://www.sacredseedstudio.com/Unity-File-Debug/)
 - [Unity Asset Store](https://assetstore.unity.com/packages/tools/utilities/unity-file-debug-72250)
 
 ## Why
-This project has a few goals:
-- Output Unity debug info to log files
-- A nice web interface to view the logs
+- Output Unity debug info to log files (csv, tsv, json, txt)
+- A nice web interface to view the log files (csv, tsv, json)
   - HTML5
   - No external dependencies
   - Searchable via message, stacktrace, timestamp, logtype
@@ -27,15 +26,50 @@ This project has a few goals:
 3. Setup the filepath and settings in the inspector
 4. Copy the HTML to your output path via inspector button
 5. Use `Debug.Log` as normal, or for more advanced usage see [Tester](/Assets/UnityFileDebug/Demo/Tester.cs) script in `Demo` folder
-6. Open the `index.html` file from your log folder, browse for a `*.json` log in the top left
+6. Open the `UnityFileDebugViewer.html` file from your log folder, browse for a log file from the top left
+
+If you don't specify an absolute filepath, Application.persistentDataPath will be used.
+
+HTML viewer is designed for modern browsers (chrome/firefox)
 
 ## Developing
 - Fork/clone this repository
 - Open in Unity
 - Hack away
 
+## How to Customize
+### Custom log types
+1. Change DLogType enumeration in [DebugWrapper.cs](/Assets/UnityFileDebug/Lib/Logger/Scripts/DebugWrapper.cs)
+2. Update `topLogTypes` and `nestedLogTypes` arrays in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
+3. Update `LogTypeColors` css in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
+4. Update svg icons in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
+
+### No nesting in viewer
+1. Move all elements from `nestedLogTypes` array to `topLogTypes` in [UnityFileDebugViewer.html](/Assets/UnityFileDebug/Lib/Viewer/UnityFileDebugViewer.cs)
+
+### Using other log sources
+The viewer supports a few different file formats
+
+##### JSON format:
+```js
+{
+  t: '', // type
+  tm: '', // time
+  l: '', // log message
+  s: '', // log stack trace
+}
+```
+
+##### CSV header:
+`type,time,log,stack`
+
+##### TSV header:
+`type	time	log	stack`
+
+---
+
 ## Release
-In the Unity Editor, click the menu option `Package/Update Package`. The `UnityFileDebug.unitypackage` will be in the root of this project.
+In the Unity Editor, click the menu option `SSS/Util/Package/Unity File Debug`. The `UnityFileDebug.unitypackage` will be in the root of this project.
 
 <!--
 Badge References

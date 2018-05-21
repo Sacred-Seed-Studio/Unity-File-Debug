@@ -2,7 +2,7 @@
 
 public class PackageAsset
 {
-    [MenuItem("Package/Update Package")]
+    [MenuItem("SSS/Util/Package/Unity File Debug")]
     static void UpdatePackage()
     {
         AssetDatabase.ExportPackage("Assets/UnityFileDebug", "UnityFileDebug.unitypackage", ExportPackageOptions.Recurse);

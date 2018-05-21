@@ -2,6 +2,10 @@
 
 public class Tester : MonoBehaviour
 {
+    private void Start()
+    {
+        throw new System.Exception("Even regular exceptions are logged");
+    }
     void Update()
     {
         Debug.Log("CPU 1 has done action a", DLogType.AI);

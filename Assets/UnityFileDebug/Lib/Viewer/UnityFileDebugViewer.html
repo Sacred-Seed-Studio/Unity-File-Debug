@@ -1,0 +1,730 @@
+﻿<!-- Unity File Debug Viewer -->
+<!-- MIT License -->
+<!-- Copyright Sacred Seed Studio -->
+<!-- https://github.com/Sacred-Seed-Studio/Unity-File-Debug -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"> 
+    <title>Unity File Debug Viewer</title>
+    <style type="text/css">
+        html, body, div, span {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-weight: inherit;
+            font-style: inherit;
+            font-size: 100%;
+            font-family: Verdana, "helvetica neue", Helvetica, Arial, sans-serif;
+            vertical-align: baseline;
+        }
+        body {
+            font-size: 14px;
+            line-height: 1.25;
+            color: black;
+            background-color: #2c3e50;
+            color: #bdc3c7;
+        }
+        ol, ul {
+            list-style: none;
+            padding-left: 20px;
+            font-size: 1.4em;
+            line-height: 1.4em;
+        }
+        ul ul {
+            font-size: 1em;
+        }
+        button {
+            background: #e3e3e3;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            -webkit-box-shadow: inset 0 0 1px 1px #f6f6f6;
+            box-shadow: inset 0 0 1px 1px #f6f6f6;
+            color: #333;
+            font: bold 12px/1 Verdana, "helvetica neue", helvetica, arial, sans-serif;
+            padding:  4px 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #d9d9d9;
+            -webkit-box-shadow: inset 0 0 1px 1px #eaeaea;
+            box-shadow: inset 0 0 1px 1px #eaeaea;
+            color: #222;
+        }
+        button:active {
+            background: #d0d0d0;
+            -webkit-box-shadow: inset 0 0 1px 1px #e3e3e3;
+            box-shadow: inset 0 0 1px 1px #e3e3e3;
+            color: #000; 
+        }
+        #sidePanel{
+            display: block;
+            position: fixed;
+            width: 20%;
+            height: 100%;
+            overflow: auto;
+        }
+        #systemInfo, #loadLog {
+            margin: 0 0 10px 0;
+            line-height: 1.25;
+            padding: 10px;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        #large {
+            padding: 0 7px;
+            font-size: 125%;
+        }
+        #large p {
+            padding: 5px;
+            border: 2px solid #d62728;
+            border-radius: 5px;
+        }
+        #systemInfo #title, 
+        #systemInfo #system, 
+        #systemInfo #started,
+        #systemInfo #ended {
+            display: block;
+        }
+        #search {
+            display: block;
+            margin: 0 auto;
+            width: 90%;
+            border-radius: 4px;
+            padding: 5px;
+        }
+        #mainPanel{
+            display: block;
+            width: 80%;
+            margin-left: 20%;
+            overflow: auto;
+        }
+        #mainPanel #welcome {
+            text-align: center;
+            width: 100%;
+            margin-top: 45vh;
+        }
+        .icon {
+            vertical-align: middle;
+            margin-right: 3px;
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+        }
+        #sidePanel .icon {
+            fill: #bdc3c7;
+        }
+        #mainPanel .icon {
+            fill: #222;
+        }
+        .entry {
+            margin: 5px;
+            background-color: #bdc3c7;
+            color: #222;
+            border-radius: 2px;
+        }
+        .timestamp {
+            padding: 5px;
+            display: block;
+            float: right;
+        }
+        .message {
+            padding: 5px;
+            display: block;
+        }
+        .stackBtn {
+            margin-right: 10px;
+        }
+        .stack {
+            display: block;
+            background-color: #f0f0f0;
+            padding: 10px;
+            color: #2c3e50;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+        .legend {
+            display: inline-block;
+            width: 0.75em;
+            height: 0.75em;
+            margin: 0 8px;
+        }
+        .repo {
+            display: block;
+            position: fixed;
+            bottom: 30px;
+            left: 10px;
+        }
+        .repo a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .issues {
+            display: block;
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+        }
+        .issues a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .hidden {
+            display: none;
+        }
+        /* LogTypeColors */
+        .error {
+            background-color: #d62728;
+        }
+        .exception {
+            background-color: #ff9896;
+        }
+        .warning {
+            background-color: #f1c40f;
+        }
+        .system {
+            background-color: #17becf;
+        }
+        .assert {
+            background-color: #ff7f0e;
+        }
+        .log {
+            background-color: #c7c7c7;
+        }
+        .ai {
+            background-color: #aec7e8;
+        }
+        .audio {
+            background-color: #ffbb78;
+        }
+        .content {
+            background-color: #2ca02c;
+        }
+        .logic {
+            background-color: #98df8a;
+        }
+        .gui {
+            background-color: #9467bd;
+        }
+        .input {
+            background-color: #9edae5;
+        }
+        .network {
+            background-color: #c49c94;
+        }
+        .physics {
+            background-color: #e377c2;
+        }
+        /* Override so counts aren't colored */
+        .count {
+            background-color: transparent;
+            font-size: 0.7em;
+        }
+    </style>
+</head>
+<body>
+    <!-- from https://google.github.io/material-design-icons/ and https://octicons.github.com/ -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      
+        <symbol id="assertIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M14.59 8L12 10.59 9.41 8 8 9.41 10.59 12 8 14.59 9.41 16 12 13.41 14.59 16 16 14.59 13.41 12 16 9.41 14.59 8zM12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/> 
+        </symbol>
+      
+        <symbol id="errorIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/> 
+        </symbol>
+
+        <symbol id="exceptionIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0V0z" fill="none"/>
+            <path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/> 
+        </symbol>
+
+        <symbol id="warningIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/> 
+        </symbol>
+
+        <symbol id="systemIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/>
+        </symbol>
+
+        <symbol id="logIcon" viewBox="0 0 24 24">
+            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+            <path d="M0 0h24v24H0z" fill="none"/> 
+        </symbol>
+
+        <symbol id="aiIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 1.23 12.95 1 12 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.97 3.26 6 5.01 6 7h12c0-1.99-.97-3.75-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/>
+        </symbol>
+
+        <symbol id="audioIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/> 
+        </symbol>
+
+        <symbol id="contentIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+        </symbol>
+
+        <symbol id="logicIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0V0z" fill="none"/>
+            <path d="M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z"/>
+            <path d="M0 0h24v24H0z" fill="none"/> 
+        </symbol>
+
+        <symbol id="guiIcon" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+        </symbol>
+
+        <symbol id="inputIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M15 7.5V2H9v5.5l3 3 3-3zM7.5 9H2v6h5.5l3-3-3-3zM9 16.5V22h6v-5.5l-3-3-3 3zM16.5 9l-3 3 3 3H22V9h-5.5z"/>  
+        </symbol>
+
+        <symbol id="networkIcon" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/> 
+        </symbol>
+
+        <symbol id="physicsIcon" viewBox="0 0 24 24">
+            <path d="M4.59 6.89c.7-.71 1.4-1.35 1.71-1.22.5.2 0 1.03-.3 1.52-.25.42-2.86 3.89-2.86 6.31 0 1.28.48 2.34 1.34 2.98.75.56 1.74.73 2.64.46 1.07-.31 1.95-1.4 3.06-2.77 1.21-1.49 2.83-3.44 4.08-3.44 1.63 0 1.65 1.01 1.76 1.79-3.78.64-5.38 3.67-5.38 5.37 0 1.7 1.44 3.09 3.21 3.09 1.63 0 4.29-1.33 4.69-6.1H21v-2.5h-2.47c-.15-1.65-1.09-4.2-4.03-4.2-2.25 0-4.18 1.91-4.94 2.84-.58.73-2.06 2.48-2.29 2.72-.25.3-.68.84-1.11.84-.45 0-.72-.83-.36-1.92.35-1.09 1.4-2.86 1.85-3.52.78-1.14 1.3-1.92 1.3-3.28C8.95 3.69 7.31 3 6.44 3 5.12 3 3.97 4 3.72 4.25c-.36.36-.66.66-.88.93l1.75 1.71zm9.29 11.66c-.31 0-.74-.26-.74-.72 0-.6.73-2.2 2.87-2.76-.3 2.69-1.43 3.48-2.13 3.48z"/>
+            <path d="M0 0h24v24H0z" fill="none"/>
+        </symbol>
+
+        <symbol id="githubIssue"  viewBox="0 0 896 1024">
+            <path d="M448 64C200.562 64 0 264.562 0 512c0 247.438 200.562 448 448 448 247.438 0 448-200.562 448-448C896 264.562 695.438 64 448 64zM448 832c-176.781 0-320-143.25-320-320 0-176.781 143.219-320 320-320 176.75 0 320 143.219 320 320C768 688.75 624.75 832 448 832zM384 768h128V640H384V768zM384 576h128V256H384V576z" />
+        </symbol>
+
+        <symbol id="githubRepo" viewBox="0 0 896 1024">
+            <path d="M608 192l-96 96 224 224L512 736l96 96 288-320L608 192zM288 192L0 512l288 320 96-96L160 512l224-224L288 192z" />
+        </symbol>
+    </svg>
+
+    <div id="sidePanel">
+        <div id="loadLog">
+            <input type="file" id="file" name="file" accept=".csv, .json, .tsv" />
+        </div>
+        <div id="systemInfo">
+            <span id="title"></span>
+            <span id="started">Started: <span id="startTime"></span></span>
+            <span id="ended">Ended: <span id="endTime"></span></span>
+        </div>
+        <div id="query">
+            <input type="search" id="search" placeholder="Search the logs">
+            <ul id="checkbox-list">
+                <li><label><input type="checkbox" checked="checked" id="allCheckbox">Select All<span id="allCount" class="count all"></span></label></li>
+            </ul>
+        </div>
+        <div id="large" class="hidden">
+            <p>There are large log types, they were unchecked for performance. Things may take seconds to compute</p>
+        </div>
+        <div id="footer">
+            <span class="repo">
+                <a href="https://github.com/Sacred-Seed-Studio/Unity-File-Debug" target="_blank"><svg class="icon"><use xlink:href="#githubRepo" /></svg>Source</a>
+            </span>
+            <span class="issues">
+                <a href="https://github.com/Sacred-Seed-Studio/Unity-File-Debug/issues" target="_blank"><svg class="icon"><use xlink:href="#githubIssue" /></svg>Issues</a>
+            </span>
+        </div>
+    </div>
+
+    <div id="mainPanel">
+        <div id="welcome">
+            <h1>Welcome to Unity File Debug Viewer</h1>
+            <p>To start, load an exported .csv, .tsv, .json in the top left</p>
+            <p>Note: thousands of logs can result in this page taking seconds to compute</p>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        { // Variables
+            var checkEvent = new CustomEvent('change', { checked: this.checked });
+            // If there are more than this many logs, they will be disabled by default
+            var maxToShowByDefault = 100;
+            var largeFile = false;
+
+            // Elements
+            var mainPanel = document.getElementById('mainPanel');
+            var searchBox = document.getElementById('search');
+            var title = document.getElementById('title');
+            var startTime = document.getElementById('startTime');
+            var endTime = document.getElementById('endTime');
+            var largeNotice = document.getElementById('large');
+            var checkboxList = document.getElementById('checkbox-list');
+            var counts = {};
+            var countElements = {
+                all: document.getElementById('allCount')
+            };
+            var checklistElements = {};
+            var entryElements = {};
+            var checkboxElements = {
+                all: document.getElementById('allCheckbox')
+            };
+            var theSearchableElements = [];
+
+            // Must have at least 1
+            var topLogTypes = [
+                'assert',
+                'error',
+                'exception',
+                'warning',
+                'system',
+                'log'
+            ];
+            // Optional, nested under the last topLogType
+            var nestedLogTypes = [
+                'ai',
+                'audio',
+                'content',
+                'logic',
+                'gui',
+                'input',
+                'network',
+                'physics'
+            ];
+            var allLogTypes = topLogTypes.concat(nestedLogTypes);
+        }
+        
+        { // Functions
+            { // Init
+                // Creates an li element for checking off log types
+                function logTypeToLiElement(logType) {
+                    var li = document.createElement('li');
+                    li.id = "li-" + logType;
+                    var label = document.createElement('label');
+                    li.innerHTML = '<label><input type="checkbox" checked="checked" id="' + logType + 'Checkbox">' +
+                        '<span class="legend ' + logType + '"></span>' +
+                        '<svg class="icon"><use xlink: href="#' + logType + 'Icon" /></svg>' + logType.charAt(0).toUpperCase() + logType.slice(1) +
+                        '<span class="count ' + logType + '"></span></label>';
+                    return li;
+                }
+
+                // Setup checkboxes, references, and listeners
+                function init(params) {
+                    // Setup checkboxes
+                    var li, inner, label, ul;
+                    topLogTypes.forEach(function(e, i, a){
+                        if (i < a.length - 1) {
+                            checklistElements[e] = logTypeToLiElement(e)
+                            checkboxList.appendChild(checklistElements[e]);
+                        }
+                        else {
+                            // Setup nested checkboxes
+                            li = document.createElement('li');
+
+                            label = document.createElement('label');
+                            inner = '<input type="checkbox" checked="checked" id="' + e + 'Checkbox">' +
+                                '<span class="legend ' + e + '"></span>' +
+                                '<svg class="icon"><use xlink: href="#' + e + 'Icon" /></svg>' + e.charAt(0).toUpperCase() + e.slice(1) +
+                                '<span class="count ' + e + '"></span>';
+                            label.innerHTML = inner;
+                            li.appendChild(label);
+
+                            ul = document.createElement('ul');
+                            nestedLogTypes.forEach(function(ne){
+                                checklistElements[ne] = logTypeToLiElement(ne)
+                                ul.appendChild(checklistElements[ne]);
+                            });
+                            li.appendChild(ul);
+
+                            checkboxList.appendChild(li);
+                        }
+                    });
+                    
+                    // Setup references
+                    allLogTypes.forEach(function (n) {
+                        counts[n] = 0;
+                        countElements[n] = document.getElementsByClassName("count " + n)[0];
+                        entryElements[n] = [];
+                        checkboxElements[n] = document.getElementById(n + 'Checkbox');
+                    });
+                    setupCheckboxListeners();
+                }
+            }
+
+            { // File
+                // Handles when a file is selected. Determines if proper file type and tries to parse it
+                function handleFileSelect(evt) {
+                    console.time("handleFileselect()");
+                    var file = this.files[0];
+                    if (file) {
+                        var isCSV = file.name.indexOf('.csv') == file.name.length - 4;
+                        var isJSON = file.name.indexOf('.json') == file.name.length - 5;
+                        var isTSV = file.name.indexOf('.tsv') == file.name.length - 4;
+                        var fileExtension = isCSV ? '.csv' : isJSON ? '.json' : isTSV ? '.tsv' : undefined;
+                        var seperator = isCSV ? "," : isTSV ? '\t' : undefined;
+
+                        title.textContent = file.name.substr(0, file.name.indexOf('.'));
+                        var timesnip = file.name.replace(title.textContent + ".", '').substr(title.textContent.indexOf('.') + 1).replace(fileExtension, '');
+                        startTime.textContent = new Date(timesnip.substr(0, 10).replace(/\./g, '-') + "T" + timesnip.substr(11, 2) + ":" + timesnip.substr(14, 2) + ":" + timesnip.substr(17, 2)).toLocaleString();
+                        endTime.textContent = file.lastModifiedDate.toLocaleString();
+
+                        if (isCSV || isTSV) {
+                            var reader = new FileReader();
+                            reader.onload = function (f) {
+                                populateLogs(
+                                    f.target.result
+                                        .split('\n')
+                                        .slice(1) // remove header
+                                        .filter(function (n) { return n.length; }) // remove empty lines
+                                        .map(function (n) { return n.split(seperator); }) // break apart line
+                                        .map(function (n) { // format
+                                            return {
+                                                t: n[0],
+                                                tm: n[1],
+                                                l: n[2],
+                                                s: n[3]
+                                            };
+                                        })
+                                );
+                                updateCounts();
+                                updateEntriesList();
+                                setDefaultCheckboxState();
+                            }
+                            reader.readAsText(file);
+                        }
+                        else if (isJSON) {
+                            var reader = new FileReader();
+                            reader.onload = function (f) {
+                                populateLogs(JSON.parse(f.target.result));
+                                updateCounts();
+                                updateEntriesList();
+                                setDefaultCheckboxState();
+                            }
+                            reader.readAsText(file);
+                        }
+                        else {
+                            alert('unsupported file type');
+                        }
+                    }
+                    console.timeEnd("handleFileselect()");
+                }//handleFileselect
+
+                // clear existing logs, iterate through file data add new to document
+                function populateLogs(fileData) {
+                    console.time("populateLogs()");
+                    mainPanel.innerHTML = "";
+                    // Reset our counts
+                    Object.keys(counts).forEach(function (n) { counts[n] = 0; });
+                    // Loop through each log entry and add some html
+                    var entry, inner, time, type;
+                    fileData
+                        .filter(function (n) {
+                            return allLogTypes.includes(n.t.toLowerCase());
+                        })
+                        .forEach(function (log) {
+                            type = log.t.toLowerCase();
+                            counts[type] = ++counts[type];
+                            entry = document.createElement('div');
+                            entry.classList.add('entry', type);
+                            entry.classList.add('hidden');
+                            time = log.tm ? new Date(log.tm.substr(0, 10).replace(/\./g, '-') + "T" + log.tm.substr(11, 2) + ":" + log.tm.substr(14, 2) + ":" + log.tm.substr(17, 2)).toLocaleString() : "";
+                            inner = '<span class="timestamp">' + time + '</span>' +
+                                '<span class="message"><svg class="icon"><use xlink:href="#' + type + 'Icon" /></svg><button class="stackBtn" onclick="openCloseStack(this)">Stack</button>' + log.l + '</span>' +
+                                '<span class="stack hidden">' + log.s.replace('\n', "<br>") + '</span>';
+                            entry.innerHTML = inner;
+                            mainPanel.appendChild(entry);
+                        });
+                    console.timeEnd("populateLogs()");
+                }//populateLogs
+
+                // Update counts, hide empty lists
+                function updateCounts() {
+                    console.time("updateCounts()");
+                    // Aggregate count
+                    var allCount = 0;
+                    Object.keys(counts).forEach(function(key) { allCount += counts[key]; })
+                    countElements.all.textContent = " (" + allCount + ")"
+
+                    // log type counts
+                    allLogTypes.forEach(function (n) {
+                        // Update counts
+                        countElements[n].textContent = " (" + counts[n] + ")";
+
+                        // Hide no counts
+                        if (n !== topLogTypes[topLogTypes.length - 1]) {
+                            if (!counts[n]) { checklistElements[n].classList.add('hidden'); }
+                            else { checklistElements[n].classList.remove('hidden'); }
+                        }
+                    });
+                    console.timeEnd("updateCounts()");
+                }//updateCounts
+
+                // Update entryElements with all the entry elements
+                function updateEntriesList() {
+                    console.time("updateEntriesList()");
+                    allLogTypes.forEach(function (n) {
+                        entryElements[n] = document.getElementsByClassName("entry " + n);
+                    });
+                    console.timeEnd("updateEntriesList()");
+                }//updateEntriesList
+
+                // disables checkboxes if their counts are too large
+                function setDefaultCheckboxState() {
+                    var any = false, topOfNested = false;
+                    Object.keys(counts)
+                        .forEach(function (key) {
+                            if (counts[key] > maxToShowByDefault) {
+                                any = true;
+                                checkboxElements[key].checked = false;
+                            }
+                            else {
+                                checkboxElements[key].checked = true;
+                            }
+                            checkboxElements[key].dispatchEvent(checkEvent);
+                        });
+                    if (any) {
+                        checkboxElements["all"].checked = false;
+                        largeNotice.classList.remove('hidden');
+                    }
+                    else {
+                        checkboxElements["all"].checked = true;
+                        checkboxElements["all"].dispatchEvent(checkEvent);
+                        largeNotice.classList.add('hidden');
+                    }
+                }//setDefaultCheckboxState
+            }
+            
+            { // Helpers
+                // attached to buttons to open/close stack for current entry
+                function openCloseStack(element) {
+                    console.time("openCloseStack()");
+                    var stack = element.parentElement.parentElement.getElementsByClassName('stack');
+                    stack[0].classList.toggle('hidden');
+                    console.timeEnd("openCloseStack()");
+                }//openCloseStack
+
+                // show/hide the log entry from checkbox. Update theSearchableElements. If a search is present rerun it
+                function showOrHideLogEntry(type, checked) {
+                    // console.time("showOrHideLogEntry(" + type + ")");
+                    for (var i = 0; i < entryElements[type].length; i++) {
+                        if (checked) {
+                            entryElements[type][i].classList.remove("hidden");
+                            var idx = theSearchableElements.indexOf(entryElements[type][i]);
+                            if (idx === -1) {
+                                theSearchableElements.push(entryElements[type][i]);
+                            }
+                        }
+                        else {
+                            entryElements[type][i].classList.add("hidden");
+                            var idx = theSearchableElements.indexOf(entryElements[type][i]);
+                            if (idx !== -1) {
+                                theSearchableElements.splice(idx, 1);
+                            }
+                        }
+                    }
+                    // If there is a search query rerun it
+                    if (searchBox.value) {
+                        var event = new CustomEvent('input', {});
+                        searchBox.dispatchEvent(event);
+                    }
+                    // console.timeEnd("showOrHideLogEntry(" + type + ")");
+                }//showOrHideLogEntry
+
+                // Helper to handle search query
+                function search(evt) {
+                    console.time('search()');
+                    let anyChecked = Object.keys(checkboxElements).map(n => checkboxElements[n].checked).some(function(n){ return n; });
+                    console.log('search, anything checked?', anyChecked);
+                    if (anyChecked) {
+                        var searchQuery = this.value.toLowerCase();
+                        var messages, stack, type, time, inMessage, inStack, inType, inTime;
+                        theSearchableElements.forEach(function (element) {
+                            // Reset
+                            inType = false;
+                            inTime = false;
+                            type = element.classList.toString().replace("entry", "").replace("hidden", "").replace(" ", "");
+                            time = element.getElementsByClassName('timestamp')[0].textContent.toLowerCase();
+                            if (time.indexOf(searchQuery) > -1) { inTime = true; }
+                            if (type.indexOf(searchQuery) > -1) { inType = true; }
+                            // Loop if not already a match
+                            if (!inType && !inTime) {
+                                inMessage = false;
+                                inStack = false;
+                                messages = element.getElementsByClassName('message');
+                                stack = element.getElementsByClassName('stack');
+                                // Loop through messages
+                                for (var j = 0; j < messages.length; j++) {
+                                    if (messages[j].nodeType == 1) {
+                                        if (messages[j].textContent.toLowerCase().indexOf(searchQuery) > -1) { inMessage = true; break; }
+                                    }
+                                }//for each message
+                                if (!inMessage) {
+                                    // Loop through stack
+                                    for (var j = 0; j < stack.length; j++) {
+                                        if (stack[j].nodeType == 1) {
+                                            if (stack[j].textContent.toLowerCase().indexOf(searchQuery) > -1) { inStack = true; break; }
+                                        }
+                                    }//for each stack 
+                                }
+                            }
+                            // Add remove classes if found
+                            if (inMessage || inStack || inType || inTime) { element.classList.remove("hidden"); }
+                            else { element.classList.add("hidden"); }
+                        });// for each theSearchableElements
+                    }
+                    else {
+                        theSearchableElements.forEach(function(n){ n.classList.add("hidden"); })
+                    }
+                    console.timeEnd('search()');
+                }//search
+            }
+        }
+        
+        { // Listeners
+            // DOM Content Loaded, initialize the page
+            document.addEventListener('DOMContentLoaded', function () {
+                console.time("DOMContentLoaded");
+                init();
+                console.timeEnd("DOMContentLoaded");
+            }, false); //DOMContentLoaded
+
+            // File loading
+            document.getElementById('file').addEventListener('change', handleFileSelect, false);
+
+            // Search logic
+            searchBox.addEventListener('input', search, false);
+
+            function setupCheckboxListeners() {
+                // Listener for the select all checkbox
+                checkboxElements.all.addEventListener('change', function (e) {
+                    let checked = this.checked;
+                    var event = new CustomEvent('change', { checked: checked });
+                    topLogTypes.forEach(function(n){
+                        checkboxElements[n].checked = checked;
+                        checkboxElements[n].dispatchEvent(event);
+                    });
+                });//allCheckbox change
+    
+                // Listener for the nested checkbox
+                checkboxElements[topLogTypes[topLogTypes.length - 1]].addEventListener('change', function (e) {
+                    let checked = this.checked;
+                    showOrHideLogEntry(topLogTypes[topLogTypes.length - 1], checked);
+                    var event = new CustomEvent('change', { checked: checked });
+                    nestedLogTypes.forEach(function(n){
+                        checkboxElements[n].checked = checked;
+                        checkboxElements[n].dispatchEvent(event);
+                    });
+                });//logCheckbox change
+    
+                // Listeners for individual checkboxes
+                Object.keys(checkboxElements)
+                    .filter(function (n) { return n !== 'all' && n !== topLogTypes[topLogTypes.length - 1] })
+                    .forEach(function (n) {
+                        checkboxElements[n].addEventListener('change', function (e) {
+                            if (e.checked) { showOrHideLogEntry(n, e.checked); }
+                            else { showOrHideLogEntry(n, this.checked); }
+                        });
+                    });
+            }
+        }        
+    </script>
+</body>
+</html>
