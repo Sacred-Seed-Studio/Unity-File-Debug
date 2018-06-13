@@ -36,6 +36,7 @@ public static class Debug
     #region Helper
     public static void Break() { UnityEngine.Debug.Break(); }
     public static void ClearDeveloperConsole() { UnityEngine.Debug.ClearDeveloperConsole(); }
+    public static bool isDebugBuild { get { return UnityEngine.Debug.isDebugBuild; } }
     #endregion
 
     #region Draw
