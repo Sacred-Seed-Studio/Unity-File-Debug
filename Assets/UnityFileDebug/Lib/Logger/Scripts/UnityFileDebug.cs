@@ -115,8 +115,16 @@ namespace SSS
                 else
                 {
                     int end = logString.IndexOf("]");
-                    output.t = logString.Substring(1, end - 1);
-                    output.l = logString.Substring(end + 2);
+                    if (end > 1)
+                    {
+                        output.t = logString.Substring(1, end - 1);
+                        output.l = logString.Substring(end + 2);
+                    }
+                    else
+                    {
+                        output.t = type.ToString();
+                        output.l = logString;
+                    }
                 }
 
                 output.s = stackTrace;
